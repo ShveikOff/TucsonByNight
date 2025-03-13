@@ -4,6 +4,17 @@ using UnityEngine;
 [System.Serializable]
 public class VtMHealthTrack : WoDHealthTrack
 {
+    // Конструктор, принимающий шаблон, вызывает базовый конструктор
+    public VtMHealthTrack(HealthTemplate template) : base(template)
+    {
+    }
+
+    // Параметрless-конструктор для сериализации
+    public VtMHealthTrack() : base()
+    {
+    }
+
+
     /// <summary>
     /// Реализация метода ApplyDamage:
     /// для каждого единичного урона вызывается ApplySingleDamage,
@@ -35,6 +46,13 @@ public class VtMHealthTrack : WoDHealthTrack
         // а последняя ячейка (boxes.Length - 1) используется для Incap.
         int nonIncapRange = boxes.Length - 1;
         int incapIndex = boxes.Length - 1;
+
+        int indexEmpty = FindFirstIndexOfInRange(DamageType.None, 0, nonIncapRange);
+        if (indexEmpty != -1)
+        {
+            boxes[indexEmpty].damageType = damageType;
+            return;
+        }
 
         switch (damageType)
         {

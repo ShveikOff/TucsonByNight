@@ -4,6 +4,15 @@ using UnityEngine;
 
 public abstract class WoDHealthTrack : HealthTrack
 {
+    // Конструктор, принимающий шаблон, вызывает базовый конструктор
+    public WoDHealthTrack(HealthTemplate template) : base(template)
+    {
+    }
+
+    // Параметрless-конструктор для сериализации
+    public WoDHealthTrack() : base()
+    {
+    }
     /// <summary>
     /// Инициализация массива ячеек на основе шаблона.
     /// Если шаблон задан, количество ячеек = количеству записей в шаблоне,
@@ -14,7 +23,7 @@ public abstract class WoDHealthTrack : HealthTrack
         int cellCount = (template != null && template.BoxesStatus != null)
                         ? template.BoxesStatus.Count
                         : 7;
-        boxes = new HealthBox[cellCount];
+        boxes = new HealthBox[cellCount-1];
         for (int i = 0; i < boxes.Length; i++)
         {
             boxes[i] = new HealthBox(DamageType.None);
@@ -101,7 +110,7 @@ public abstract class WoDHealthTrack : HealthTrack
                 case 3:
                 case 4: return -2;
                 case 5: return -5;
-                default: return -999;
+                default: return -99;
             }
         }
     }

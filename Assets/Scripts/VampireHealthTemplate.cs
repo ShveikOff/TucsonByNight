@@ -7,13 +7,14 @@ public class VampireHealthTemplate : HealthTemplate
     private Dictionary<int, (int penalty, string woundName)> boxesStatus =
         new Dictionary<int, (int penalty, string woundName)>
         {
-            {0, (0, "Bruised")},
-            {1, (-1, "Hurt")},
-            {2, (-1, "Injured")},
-            {3, (-2, "Wounded")},
-            {4, (-2, "Mauled")},
-            {5, (-5, "Crippled")},
-            {6, (-999, "Incap")}
+            {0, (0, "Not Injured")},
+            {1, (0, "Bruised")},
+            {2, (-1, "Hurt")},
+            {3, (-1, "Injured")},
+            {4, (-2, "Wounded")},
+            {5, (-2, "Mauled")},
+            {6, (-5, "Crippled")},
+            {7, (-999, "Incap")}
         };
 
     public override Dictionary<int, (int penalty, string woundName)> BoxesStatus => boxesStatus;

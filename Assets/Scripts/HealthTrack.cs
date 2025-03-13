@@ -6,6 +6,30 @@ public abstract class HealthTrack
     [SerializeField] protected HealthBox[] boxes;      // Массив ячеек здоровья
     [SerializeField] protected HealthTemplate template;  // Шаблон (конфиг) для определения уровней, штрафов и т.д.
 
+
+    protected HealthTrack(HealthTemplate template)
+    {
+        this.template = template;
+        int cellCount = (template != null && template.BoxesStatus != null)
+                        ? template.BoxesStatus.Count
+                        : 7;
+        boxes = new HealthBox[cellCount-1];
+        for (int i = 0; i < boxes.Length; i++)
+        {
+            boxes[i] = new HealthBox(DamageType.None);
+        }
+    }
+
+    protected HealthTrack()
+    {
+        int cellCount = 7;
+        boxes = new HealthBox[cellCount];
+        for (int i = 0; i < boxes.Length; i++)
+        {
+            boxes[i] = new HealthBox(DamageType.None);
+        }
+    }
+    
     /// <summary>
     /// Инициализация системы здоровья.
     /// Обычно создаёт массив ячеек на основе данных из template.
