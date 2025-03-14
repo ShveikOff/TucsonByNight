@@ -4,6 +4,9 @@ using UnityEngine;
 public class CharacterVtMTemplate : ScriptableObject
 {
     [Header("General Info")]
+    [Tooltip("Вид персонажа, например 'kindred', 'mortal', 'werwolf'")]
+    public string characterType;
+
     [Tooltip("Отображаемое имя персонажа, например 'Brujah Neonate' или 'Alice Doe'.")]
     public string displayName;
 
@@ -49,7 +52,7 @@ public class CharacterVtMTemplate : ScriptableObject
     public int bloodLimit = 1;
 
     [Tooltip("Здоровье персонажа")]
-    public int health;
+    public HealthTrack healthTrack;
 
     [Header("Optional Fields")]
     [Tooltip("Спрайт/иконка персонажа, если нужно показывать портрет.")]
