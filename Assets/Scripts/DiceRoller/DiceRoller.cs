@@ -29,8 +29,6 @@ public class DiceRollResult
         this.rolls = rolls;
     }
 }
-
-
 public class DiceRoller
 {
     public event Action<DiceRollResult> OnDiceRolled;
