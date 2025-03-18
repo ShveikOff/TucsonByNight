@@ -54,6 +54,8 @@ public abstract class HealthTrack
     /// <summary>
     /// Возвращает текущий штраф к броскам, основанный на заполненных ячейках и шаблоне.
     /// </summary>
+    /// 
+    public abstract string GetWoundName();
     public abstract int GetWoundPenalty();
 
     /// <summary>

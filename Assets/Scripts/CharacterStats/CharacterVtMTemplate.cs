@@ -3,7 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharacterVtMTemplate", menuName = "VtM/Vtm Character Template")]
 public class CharacterVtMTemplate : CharacterWoDTemplate
 {
-    [Header("Общая информация")]
+    [Header("Abilities")]
+    public Talents talents;
+    public Skills skills;
+    public Knowledges knowledges;
+
+    [Header("Особенности вампира")]
     [Tooltip("Клан вампира (Brujah, Toreador, Malkavian, etc.)")]
     public string clan;
 
@@ -39,20 +44,9 @@ public class CharacterVtMTemplate : CharacterWoDTemplate
     [Tooltip("Бладпул")]
     public int bloodPool;
 
-    [Tooltip("Здоровье персонажа")]
-    public HealthTrack healthTrack;
+    [Header("Health Settings")]
+    [Tooltip("Система шкалы здоровья")]
+    [SerializeField] public VtMHealthTrack healthTrack;
 
-    [Header("Abilities")]
-    public Talents talents;
-    public Skills skills;
-    public Knowledges knowledges;
-
-    [Header("Disciplines")]
     // Need add class disciplines later
-
-    [Header("Virtues")]
-    public int Conscience;
-    public int Self_Control;
-    public int Courage;
-
 }

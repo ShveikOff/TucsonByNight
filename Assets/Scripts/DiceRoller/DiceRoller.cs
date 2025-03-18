@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Результат броска кубов: 
-/// содержит всю информацию, которую хотим сообщить подписчикам.
+/// Результат броска кубов: содержит всю информацию, которую хотим сообщить подписчикам.
 /// </summary>
 public class DiceRollResult
 {
@@ -16,8 +15,8 @@ public class DiceRollResult
     public int onesCount;
     public List<int> rolls;
 
-    public DiceRollResult(int dicePool, int difficulty, int finalResult, 
-                          int netSuccesses, int rolledSuccesses, int onesCount, 
+    public DiceRollResult(int dicePool, int difficulty, int finalResult,
+                          int netSuccesses, int rolledSuccesses, int onesCount,
                           List<int> rolls)
     {
         this.dicePool = dicePool;
@@ -29,23 +28,28 @@ public class DiceRollResult
         this.rolls = rolls;
     }
 }
-public class DiceRoller
-{
-    public event Action<DiceRollResult> OnDiceRolled;
 
-    public void RequestStandardRoll(int dicePool, int difficulty)
+/// <summary>
+/// Статический класс для броска кубиков. 
+/// Событие OnDiceRolled позволяет подписываться на результаты броска.
+/// </summary>
+public static class DiceRoller
+{
+    public static event Action<DiceRollResult> OnDiceRolled;
+
+    public static void RequestStandardRoll(int dicePool, int difficulty)
     {
         DiceRollResult result = PerformRoll(dicePool, difficulty);
         OnDiceRolled?.Invoke(result);
     }
 
-    private DiceRollResult PerformRoll(int dicePool, int difficulty)
+    private static DiceRollResult PerformRoll(int dicePool, int difficulty)
     {
         List<int> allRolls = new List<int>();
         int rolledSuccesses = 0;
         int onesCount = 0;
-
         int pool = dicePool;
+
         while (pool > 0)
         {
             pool--;
@@ -59,7 +63,7 @@ public class DiceRoller
             else if (roll == 10)
             {
                 rolledSuccesses++;
-                pool++;
+                pool++; // Дополнительный бросок за 10
             }
             else
             {

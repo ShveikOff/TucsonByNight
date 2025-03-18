@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be32b024c5d37d4db71c1fa3e644ed1, type: 3}
+  m_Name: CharacterVtMTemplate
+  m_EditorClassIdentifier: 
+  displayName: 
+  description: 
+  age: 0
+  gender: 
+  portrait: {fileID: 0}
+  characterType: 
+  nature: 
+  demeanor: 
+  physical:
+    Strength: 0
+    Dexterity: 4
+    Stamina: 0
+  social:
+    Charisma: 0
+    Manipulation: 0
+    Appearance: 0
+  mental:
+    Perception: 0
+    Intelligence: 0
+    Wits: 0
+  virtues:
+    Conscience: 0
+    Self_Control: 0
+    Courage: 0
+  willPower:
+    maxPermanentWill: 10
+    permanentWill: 0
+    temporalWill: 0
+  talents:
+    Alertness: 0
+    Athletics: 0
+    Awareness: 0
+    Brawl: 2
+    Empathy: 0
+    Expression: 0
+    Intimidation: 0
+    Leadership: 0
+    Streetwise: 0
+    Subterfuge: 0
+  skills:
+    AnimalKen: 0
+    Crafts: 0
+    Drive: 0
+    Etiquette: 0
+    Firearms: 0
+    Larceny: 0
+    Melee: 0
+    Performance: 0
+    Stealth: 0
+    Survival: 0
+  knowledges:
+    Academics: 0
+    Computer: 0
+    Finance: 0
+    Investigation: 0
+    Law: 0
+    Medicine: 0
+    Occult: 0
+    Politics: 0
+    Science: 0
+    Technology: 0
+  clan: 
+  sire: 
+  generation: 13
+  vampireGenerationStatsSO: {fileID: 11400000, guid: 14828c0b1ca41f745b7e25186f1c20d6, type: 2}
+  bloodPool: 0
+  healthTrack:
+    boxes:
+    - damageType: 0
+    - damageType: 0
+    - damageType: 0
+    - damageType: 0
+    - damageType: 0
+    - damageType: 0
+    - damageType: 0
+    template: {fileID: 11400000, guid: ac0eb570b2847b943836447e3cb018c1, type: 2}

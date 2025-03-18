@@ -16,7 +16,6 @@ public abstract class CharacterTemplate: ScriptableObject
     [Tooltip("Пол персонажа.")]
     public string gender;
 
-    [Header("Optional Fields")]
     [Tooltip("Спрайт/иконка персонажа, если нужно показывать портрет.")]
     public Sprite portrait;
 }

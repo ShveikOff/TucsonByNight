@@ -6,72 +6,95 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator anim;
 
-    // Ссылка на шаблон персонажа, задается через инспектор
     [Tooltip("Шаблон персонажа, определяющий характеристики для бросков")]
     public CharacterVtMTemplate characterTemplate;
 
-    // Ссылка на DiceRoller для выполнения бросков
-    private DiceRoller diceRoller;
-
-    private void Awake()
-    {
-        diceRoller = new DiceRoller();
-        diceRoller.OnDiceRolled += HandleDiceRollResult;
-    }
-
-    private void OnDestroy()
-    {
-        diceRoller.OnDiceRolled -= HandleDiceRollResult;
-    }
-
-    private void HandleDiceRollResult(DiceRollResult result)
-    {
-        Debug.Log("=== Dice Roll Completed ===");
-        Debug.Log("Dice Rolls: " + string.Join(", ", result.rolls));
-        Debug.Log($"rolledSuccesses = {result.rolledSuccesses}, onesCount = {result.onesCount}, netSuccesses = {result.netSuccesses}");
-        Debug.Log($"Final result = {result.finalResult}");
-
-    }
+    // Текущая цель движения (если нужно для логики)
+    private Vector3 currentDestination;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+
+        // Подписываемся на событие клика по NPC
+        NPCController[] npcs = FindObjectsOfType<NPCController>();
+        foreach (NPCController npc in npcs)
+        {
+            npc.OnNPCClicked += HandleNPCClicked;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        NPCController[] npcs = FindObjectsOfType<NPCController>();
+        foreach (NPCController npc in npcs)
+        {
+            npc.OnNPCClicked -= HandleNPCClicked;
+        }
+    }
+
+    /// <summary>
+    /// Унифицированный метод для установки цели перемещения.
+    /// </summary>
+    /// <param name="destination">Целевая точка движения.</param>
+    public void MoveTo(Vector3 destination)
+    {
+        currentDestination = destination;
+        agent.SetDestination(destination);
+        Debug.Log("Движение к точке: " + destination);
+    }
+
+    /// <summary>
+    /// Обработчик события клика по NPC.
+    /// Находит ближайшую точку на NavMesh вокруг NPC и устанавливает её как цель.
+    /// </summary>
+    private void HandleNPCClicked(NPCController npc)
+    {
+        Debug.Log("NPC clicked: " + npc.gameObject.name);
+        Vector3 npcPosition = npc.transform.position;
+        if (NavMesh.SamplePosition(npcPosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+        {
+            Vector3 offset = (agent.transform.position - npc.transform.position).normalized * 1.5f;
+            Vector3 targetPosition = hit.position + offset;
+            MoveTo(targetPosition);
+        }
+        else
+        {
+            Debug.LogWarning("Не удалось найти точку на NavMesh рядом с NPC.");
+        }
     }
 
     void Update()
     {
-        // Реализуем point & click
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
-                agent.SetDestination(hit.point);
+                // Если клик попал на объект с компонентом NPCController, то ничего не делаем,
+                // т.к. NPC сам вызовет своё событие OnNPCClicked
+                if (hit.collider.GetComponent<NPCController>() != null)
+                {
+                    return;
+                }
+                
+                // Иначе, если клик не по NPC, перемещаем игрока
+                MoveTo(hit.point);
             }
         }
 
-        // Узнаём "сырую" скорость
         float currentSpeed = agent.velocity.magnitude;
-
-        // Проверяем, насколько близко к цели
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-        {
-            // Считаем, что персонаж "дошёл" - обнуляем скорость
             currentSpeed = 0f;
-            // при желании можно вообще "остановить" агента:
-            // agent.isStopped = true;
-        }
-
-        // Передаём значение в аниматор
         anim.SetFloat("Speed", currentSpeed);
 
-        // Пример: по нажатию клавиши бросаем кубики
+        // Пример: по нажатию пробела выполняется бросок кубиков
         if (Input.GetKeyDown(KeyCode.Space))
         {
             int dicePool = CalculateDicePool();
-            int difficulty = 6; // задайте нужную сложность броска
-            diceRoller.RequestStandardRoll(dicePool, difficulty);
+            int difficulty = 6;
+            DiceRoller.RequestStandardRoll(dicePool, difficulty);
         }
     }
 
@@ -83,8 +106,7 @@ public class PlayerController : MonoBehaviour
             return 0;
         }
         
-        // Предполагается, что Dexterity задан в базовом классе, а Brawl — в talents.
-        int dexterity = characterTemplate.Dexterity;
+        int dexterity = characterTemplate.physical != null ? characterTemplate.physical.Dexterity : 0;
         int brawl = characterTemplate.talents != null ? characterTemplate.talents.Brawl : 0;
         return dexterity + brawl;
     }
