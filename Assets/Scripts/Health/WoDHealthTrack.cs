@@ -86,6 +86,11 @@ public abstract class WoDHealthTrack : HealthTrack
         return filled;
     }
 
+    public override string GetWoundName()
+    {
+        return template.BoxesStatus[GetWoundLevel()].woundName;
+    }
+
     /// <summary>
     /// Возвращает штраф к броскам, используя шаблон.
     /// Если шаблон не задан, используется упрощённая логика.
