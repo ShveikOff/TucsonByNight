@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("Шаблон персонажа, определяющий характеристики для бросков")]
     public CharacterVtMTemplate characterTemplate;
+
+    // Событие, которое уведомляет о том, что игрок запустил анимацию по триггеру.
+    public event Action<string> OnPlayerAnimationTriggered;
+    public event Action<int> OnDamageHurt;
 
     // Текущая цель движения (если нужно для логики)
     private Vector3 currentDestination;
@@ -42,7 +47,6 @@ public class PlayerController : MonoBehaviour
     {
         currentDestination = destination;
         agent.SetDestination(destination);
-        Debug.Log("Движение к точке: " + destination);
     }
 
     /// <summary>
@@ -51,19 +55,39 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleNPCClicked(NPCController npc)
     {
-        Debug.Log("NPC clicked: " + npc.gameObject.name);
         Vector3 npcPosition = npc.transform.position;
         if (NavMesh.SamplePosition(npcPosition, out NavMeshHit hit, 5f, NavMesh.AllAreas))
         {
             Vector3 offset = (agent.transform.position - npc.transform.position).normalized * 1.5f;
             Vector3 targetPosition = hit.position + offset;
             MoveTo(targetPosition);
+            StartCoroutine(WaitForArrivalAndPlayAnimation("Brawl"));
         }
         else
         {
             Debug.LogWarning("Не удалось найти точку на NavMesh рядом с NPC.");
         }
     }
+
+    public void OnAnimationComplete()
+    {
+        OnPlayerAnimationTriggered?.Invoke("Brawl");
+    }
+
+
+    private System.Collections.IEnumerator WaitForArrivalAndPlayAnimation(string triggerName)
+    {
+        // Ждем, пока агент не перестанет рассчитывать путь или не приблизится достаточно к цели
+        while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+        {
+            yield return null;
+        }
+        
+        // Запускаем анимацию, например, по триггеру
+        BrawlRoll();
+        anim.SetTrigger(triggerName);
+    }
+
 
     void Update()
     {
@@ -95,6 +119,24 @@ public class PlayerController : MonoBehaviour
             int dicePool = CalculateDicePool();
             int difficulty = 6;
             DiceRoller.RequestStandardRoll(dicePool, difficulty);
+        }
+    }
+
+    private void BrawlRoll() {
+        if (characterTemplate == null) {
+            Debug.LogWarning("CharacterTemplate не назначен!");
+        }
+        int dexterity = characterTemplate.physical != null ? characterTemplate.physical.Dexterity : 0;
+        int brawl = characterTemplate.talents != null ? characterTemplate.talents.Brawl : 0;
+        int strenght = characterTemplate.physical != null ? characterTemplate.physical.Strength : 0;
+        int dicePool = dexterity + brawl;
+        int difficulty = 6;
+        int result = DiceRoller.RequestStandardRoll(dicePool, difficulty);
+        if (result > 0) {
+            int damagePool = strenght + result - 1;
+            int damage = DiceRoller.RequestStandardRoll(damagePool, difficulty);
+            Debug.Log($"Player нанес NPC {damage} Bashing урона");
+            OnDamageHurt?.Invoke(damage);
         }
     }
 

@@ -80,11 +80,11 @@ MonoBehaviour:
   bloodPool: 0
   healthTrack:
     boxes:
-    - damageType: 0
-    - damageType: 0
-    - damageType: 0
-    - damageType: 0
-    - damageType: 0
-    - damageType: 0
-    - damageType: 0
+    - damageType: 2
+    - damageType: 2
+    - damageType: 2
+    - damageType: 2
+    - damageType: 2
+    - damageType: 2
+    - damageType: 1
     template: {fileID: 11400000, guid: ac0eb570b2847b943836447e3cb018c1, type: 2}

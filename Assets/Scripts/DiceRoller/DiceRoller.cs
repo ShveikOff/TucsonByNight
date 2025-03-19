@@ -37,10 +37,11 @@ public static class DiceRoller
 {
     public static event Action<DiceRollResult> OnDiceRolled;
 
-    public static void RequestStandardRoll(int dicePool, int difficulty)
+    public static int RequestStandardRoll(int dicePool, int difficulty)
     {
         DiceRollResult result = PerformRoll(dicePool, difficulty);
         OnDiceRolled?.Invoke(result);
+        return result.finalResult;
     }
 
     private static DiceRollResult PerformRoll(int dicePool, int difficulty)

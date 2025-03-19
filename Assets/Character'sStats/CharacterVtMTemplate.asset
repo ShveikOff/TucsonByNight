@@ -21,7 +21,7 @@ MonoBehaviour:
   nature: 
   demeanor: 
   physical:
-    Strength: 0
+    Strength: 5
     Dexterity: 4
     Stamina: 0
   social:
